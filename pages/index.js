@@ -3,7 +3,7 @@ import { Layout } from "../components/Layout.js"
 import axios from 'axios';
 
 function HomePage({products}) {
-  console.log(products);
+  //console.log(products);
   return (
       <Layout>
         <ProductForm/>

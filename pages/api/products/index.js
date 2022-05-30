@@ -1,6 +1,7 @@
 import {pool} from "../../../config/db"
 
 export default async function handler(req,res){
+    //console.log('Execute API get products : ')
     switch(req.method){
         case "GET": 
             return await getProducts(req,res);

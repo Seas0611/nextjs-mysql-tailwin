@@ -1,11 +1,14 @@
 import axios from 'axios';
 import { Layout } from '../../components/Layout'
+import { useRouter } from 'next/router';
 
 function ProductView({product}) {
 
+    const router = useRouter();
+
     const handleDelete = async (id) => {
         const res = await axios.delete('/api/products/' + id);
-        console.log(res);
+        router.push('/');
     }
 
     return (
@@ -15,7 +18,10 @@ function ProductView({product}) {
             <p>{product.description}</p>
 
             <button className="bg-red-500 hover:bg-red-700 text-white px-3 py-2" onClick={() => handleDelete(product.id)}>
-                delete
+                Delete
+            </button>
+            <button className="bg-red-500 hover:bg-red-700 text-white px-3 py-2" onClick={() => router.push('/products/edit/'+product.id)}>
+                Edit
             </button>
 
         </Layout>

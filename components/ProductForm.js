@@ -1,6 +1,8 @@
 import axios from 'axios';
 import { useState } from "react";
+import { useEffect } from 'react';
 import { useRouter } from 'next/router';
+
 
 export function ProductForm() {
 
@@ -18,22 +20,42 @@ export function ProductForm() {
 
     const handleSubmit = async (e) =>{
         e.preventDefault();
-        const res = await axios.post('/api/products',product);
+
+        if(router.query.id){
+            const res = await axios.put('/api/products/'+router.query.id, product);
+        }else{
+            const res = await axios.post('/api/products',product);
+        }
+        
         router.push('/');
     }
+
+    useEffect(()=>{
+        //console.log('acceso a use_effect');
+        const getProduct =async () =>{
+            const { data } =await axios.get('/api/products/'+router.query.id);
+            setProduct({name: data.name,description: data.description,price: data.price});
+        }
+        if(router.query.id){
+            console.log('queryid : '+router.query.id);
+            getProduct(router.query.id)
+        }
+    },[])
 
     return(
         <div>
             <form onSubmit={handleSubmit}>
                 <label htmlFor="name">Name: </label>
-                <input type="text" name="name" onChange={handleChange} />
+                <input type="text" name="name" onChange={handleChange}  value={product.name}/>
 
-                <label htmlFor="name">Price: </label>
-                <input type="text" name="price" onChange={handleChange}/>
+                <label htmlFor="price">Price: </label>
+                <input type="text" name="price" onChange={handleChange} value={product.price}/>
 
-                <label htmlFor="name">Description: </label>
-                <textarea name="description" rows="2" onChange={handleChange}></textarea>
-                <button>Save Product</button>
+                <label htmlFor="description">Description: </label>
+                <textarea name="description" rows="2" onChange={handleChange} value={product.description}></textarea>
+                <button>
+                    {router.query.id ? "Update Product" : "Save Product"}
+                </button>
             </form>
         </div>
     )
